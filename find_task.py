@@ -1,7 +1,16 @@
 import sys
+import logging
 
 import work_log
 from utils import clear_screen
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+fmt = logging.Formatter("%(asctime)s: %(levelname)s: %(name)s: %(message)s")
+file_handler = logging.FileHandler("logging_files/find_tasks.log")
+file_handler.setFormatter(fmt)
+logger.addHandler(file_handler)
 
 
 def search_options():
@@ -15,6 +24,7 @@ def search_options():
           [E] Return to main menu\n
           """)
     choose_search = input("Select an option: ")
+    logger.info("User selected {} for a search method.".format(choose_search))
 
     try:
         """Compares answer to options & throws an exception if non-existent"""
@@ -32,6 +42,8 @@ def search_options():
         else:
             raise ValueError
     except ValueError:
+        logger.warning("Exception raised.  User typed {}."
+                       .format(choose_search))
         print("\nYou entered an invalid option")
         repeat = input("Press 'any key' to try again or type QUIT to leave: ")
         if repeat == "":
@@ -44,6 +56,7 @@ def search_options():
         else:
             clear_screen()
             search_options()
+        logger.info("User selected {} to fix error.".format(repeat))
 
 
 def date_search():

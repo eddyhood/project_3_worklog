@@ -1,8 +1,18 @@
 import sys
+import logging
 
 import add_task
 import find_task
 from utils import clear_screen
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+fmt = logging.Formatter("%(asctime)s: %(levelname)s: %(name)s: %(message)s")
+file_handler = logging.FileHandler("logging_files/work_log.log")
+file_handler.setFormatter(fmt)
+logger.addHandler(file_handler)
+
 
 # Present a menu of options: Add new entry or look up previous entry
 
@@ -52,6 +62,7 @@ def main_menu():
                  [A] Add a new entry\n
                  [S] Search for a previous entry?\n\n
                  Select an option: """)
+    logger.info("User selected {} on main menu.".format(goal))
     try:
         """Compares answer to options and thows an exception if missing"""
         if goal.upper() == "A":
@@ -61,6 +72,7 @@ def main_menu():
         else:
             raise ValueError
     except ValueError:
+        logger.warning("Exception raised.  User typed {}.".format(goal))
         print("\nYou must enter [A] or [S] as a selection.")
         repeat = input("Press 'any key' to try again or type QUIT to leave. ")
         if repeat == "":
