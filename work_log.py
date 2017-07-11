@@ -1,3 +1,9 @@
+import sys
+
+import add_task
+import find_task
+from utils import clear_screen
+
 # Present a menu of options: Add new entry or look up previous entry
 
 # Runs without error and all exceptions are caught in a meaningful way
@@ -36,3 +42,38 @@
 # Entries are displayed one at a time with the ability to page through
 # records (previous,next/back).
 
+clear_screen()
+
+
+def main_menu():
+    """Displays the beginning main menu for the application"""
+    print("=============  Welcome to the Company Worklog!  =============\n")
+    goal = input("""What would you like to do?\n
+                 [A] Add a new entry\n
+                 [S] Search for a previous entry?\n\n
+                 Select an option: """)
+    try:
+        """Compares answer to options and thows an exception if missing"""
+        if goal.upper() == "A":
+            add_task.add_new()
+        elif goal.upper() == "S":
+            find_task.search_options()
+        else:
+            raise ValueError
+    except ValueError:
+        print("\nYou must enter [A] or [S] as a selection.")
+        repeat = input("Press 'any key' to try again or type QUIT to leave. ")
+        if repeat == "":
+            clear_screen()
+            main_menu()
+        elif repeat.upper() == 'QUIT':
+            clear_screen()
+            print("Thanks for visiting the worklog!")
+            sys.exit()
+        else:
+            clear_screen()
+            main_menu()
+
+
+if __name__ == "__main__":
+    main_menu()
