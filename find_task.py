@@ -75,7 +75,7 @@ def search_options():
         else:
             raise ValueError
     except ValueError:
-        logger.warning("Exception raised.  User typed {}."
+        logger.warning("Exception raised.  User typed {} for a search method."
                        .format(choose_search))
         print("\nYou entered an invalid option")
         repeat = input("Press 'any key' to try again or type QUIT to leave: ")
@@ -85,7 +85,7 @@ def search_options():
         else:
             utils.clear_screen()
             search_options()
-        logger.info("User selected {} to fix error.".format(repeat))
+        logger.info("User selected {} to fix search error.".format(repeat))
 
 
 def date_search():
@@ -100,6 +100,8 @@ def time_search():
 
 def exact_search():
     """Searches for past entires based on exact match in name or notes"""
+    utils.clear_screen()
+    print("==========  Find a Worklog Entry by Exact Match  ==========")
     search_term = input("Enter a search term: ")
     result = []
     with open("tasklogs.csv") as csvfile:
@@ -128,16 +130,27 @@ def success_search(result):
 
     while True:
         try:
-            print("Result {} of {}".format(index+1, total_results))
-            choice = input("[N]ext [P]revious [M]ain Menu [Q]uit ")
+            if 0 <= index <= (total_results-1):
+                position_index = index + 1
+            elif index > total_results:
+                position_index = total_results
+            print("Result {} of {}".format(position_index, total_results))
+            choice = input("\n[N]ext [P]revious [M]ain Menu [Q]uit ")
             if choice.upper() == "N":
-                utils.clear_screen()
-                index += 1
-                display_result(result[index])
+                try:
+                    utils.clear_screen()
+                    index += 1
+                    display_result(result[index])
+                except IndexError:
+                    print("There are no more worklogs to view.")
             elif choice.upper() == "P":
-                utils.clear_screen()
-                index -= 1
-                display_result(result[index])
+                if index == 0:
+                    utils.clear_screen()
+                    print("There are no more worklogs to view")
+                else:
+                    utils.clear_screen()
+                    index -= 1
+                    display_result(result[index])
             elif choice.upper() == "M":
                 work_log.main_menu()
             elif choice.upper() == "Q":
