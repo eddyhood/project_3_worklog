@@ -22,10 +22,10 @@ def main_menu():
         try:
             # Present main menu to user
             goal = input("""What would you like to do?\n
-                     [A] Add a new entry\n
-                     [S] Search for a previous entry\n
-                     [Q] Quit the program\n\n
-                     Select an option: """)
+                         [A] Add a new entry\n
+                         [S] Search for a previous entry\n
+                         [Q] Quit the program\n\n
+                         Select an option: """)
             logger.info("User selected {} on main menu.".format(goal))
 
             # Compares answer to options and thows an exception if missing

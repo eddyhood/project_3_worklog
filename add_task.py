@@ -22,20 +22,18 @@ class Task:
 
         # Creates a name for the task as a string
         utils.clear_screen()
+        print("==============  Add a New Work Log Here  ==============")
         task_name = (input("Enter a task name: "))
         logger.info("Task name created successfully as {}".format(task_name))
 
         # Gets date of task and converts it from string to datetime object
-        utils.clear_screen()
         while True:
             try:
                 date = (input("Enter the task date (Use MM/DD/YYYY): "))
                 task_date = datetime.datetime.strptime(str(date), "%m/%d/%Y")
             except ValueError:
-                utils.clear_screen()
                 print("Pleae Enter a valid date in the format MM/DD/YYYY")
             else:
-                utils.clear_screen()
                 logger.info("Valid date created as {}".format(task_date))
                 break
 
@@ -44,10 +42,8 @@ class Task:
             try:
                 task_time = (int(input("Enter the task time in minutes: ")))
             except ValueError:
-                utils.clear_screen()
                 print("""Hmmm, that didn't work.  Enter a number only.""")
             else:
-                utils.clear_screen()
                 logger.info("Valid time created as {}".format(task_time))
                 break
 
@@ -86,6 +82,7 @@ class Task:
 
     def success_add(self):
         """Prints a success message for when a task is added and redirects user"""
+        utils.clear_screen()
         print("""You have successfully entered the following task:\n
               Task name: {}
               Task date: {}

@@ -107,9 +107,9 @@ def exact_search():
     with open("tasklogs.csv") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            if re.search(search_term, row["Task Name"]):
+            if re.search(search_term, row["Task Name"], re.I):
                 result.append(row)
-            elif re.search(search_term, row["Task Note"]):
+            elif re.search(search_term, row["Task Note"], re.I):
                 result.append(row)
     if result == []:
         failed_search()
