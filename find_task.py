@@ -8,37 +8,69 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 fmt = logging.Formatter("%(asctime)s: %(levelname)s: %(name)s: %(message)s")
-file_handler = logging.FileHandler("logging_files/find_tasks.log")
+file_handler = logging.FileHandler("logs/find_tasks.log")
 file_handler.setFormatter(fmt)
 logger.addHandler(file_handler)
 
+# When finding previous entry, they can: find by date, find by time spent,
+# find by exact search, find by pattern
+
+# When finding by date, present a list of dates with entries and be able
+# to choose on to see entries from.
+
+# When finding by time spent, user can enter the number of minutes a task took
+# and be able to choose one to see entires from.
+
+# When finding by exact string, user should be allowed to enter a string and
+# then be presented with entries containing that string in the task name
+# or notes.
+
+# When finding by pattern, user should be allowed to enter a regular expression
+# and then be presented with entries matching that pattern in their task
+# name or notes.
+
+# When displaying the entries, the entires should be in a readable format with
+# the date, task name, time spent, and note info.
+
+
+# Entries can be deleted and edited, letting user change the date, task name,
+# time spent, and/or notes.
+
+# Entries can be searched for and found based in a date range. For example,
+# 01/01/2016 and 12/31/2016.
+
+# Entries are displayed one at a time with the ability to page through
+# records (previous,next/back).
 
 def search_options():
     """Displays the different search options for existing tasks"""
     utils.clear_screen()
     print("""Choose a search method:\n
-          [A] Find by date\n
-          [B] Find by time spent\n
-          [C] Find by exact search\n
-          [D] Find by pattern\n
-          [E] Return to main menu\n
+          [D] Find by date\n
+          [T] Find by time spent\n
+          [E] Find by exact search\n
+          [P] Find by pattern\n
+          [M] Return to main menu\n
+          [Q] Quit the program
           """)
     choose_search = input("Select an option: ")
     logger.info("User selected {} for a search method.".format(choose_search))
 
     try:
         """Compares answer to options & throws an exception if non-existent"""
-        if choose_search.upper() == "A":
+        if choose_search.upper() == "D":
             date_search()
-        elif choose_search.upper() == "B":
+        elif choose_search.upper() == "T":
             time_search()
-        elif choose_search.upper() == "C":
-            exact_search()
-        elif choose_search.upper() == "D":
-            pattern_search()
         elif choose_search.upper() == "E":
+            exact_search()
+        elif choose_search.upper() == "P":
+            pattern_search()
+        elif choose_search.upper() == "M":
             utils.clear_screen()
             work_log.main_menu()
+        elif choose_search.upper() == "Q":
+            utils.quit_program()
         else:
             raise ValueError
     except ValueError:

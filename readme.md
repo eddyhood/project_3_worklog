@@ -11,3 +11,6 @@ The goal of this project is to help devlop skills in the following areas:
 4.  PEP 8 styling
 
 This work was submitted by Eddy Hood in July 2017.
+
+<h3>Instructions</h3>
+To launch the application, open the work_log.py file.
