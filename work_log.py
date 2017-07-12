@@ -3,7 +3,7 @@ import logging
 
 import add_task
 import find_task
-from utils import clear_screen
+import utils
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -52,11 +52,10 @@ logger.addHandler(file_handler)
 # Entries are displayed one at a time with the ability to page through
 # records (previous,next/back).
 
-clear_screen()
-
 
 def main_menu():
     """Displays the beginning main menu for the application"""
+    utils.clear_screen()
     print("=============  Welcome to the Company Worklog!  =============\n")
     goal = input("""What would you like to do?\n
                  [A] Add a new entry\n
@@ -66,7 +65,7 @@ def main_menu():
     try:
         """Compares answer to options and thows an exception if missing"""
         if goal.upper() == "A":
-            add_task.add_new()
+            add_task.Task()
         elif goal.upper() == "S":
             find_task.search_options()
         else:
@@ -76,14 +75,13 @@ def main_menu():
         print("\nYou must enter [A] or [S] as a selection.")
         repeat = input("Press 'any key' to try again or type QUIT to leave. ")
         if repeat == "":
-            clear_screen()
+            utils.clear_screen()
             main_menu()
         elif repeat.upper() == 'QUIT':
-            clear_screen()
-            print("Thanks for visiting the worklog!")
-            sys.exit()
+            utils.clear_screen()
+            utils.quit_program()
         else:
-            clear_screen()
+            utils.clear_screen()
             main_menu()
 
 

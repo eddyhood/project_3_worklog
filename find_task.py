@@ -2,7 +2,7 @@ import sys
 import logging
 
 import work_log
-from utils import clear_screen
+import utils
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -15,7 +15,7 @@ logger.addHandler(file_handler)
 
 def search_options():
     """Displays the different search options for existing tasks"""
-    clear_screen()
+    utils.clear_screen()
     print("""Choose a search method:\n
           [A] Find by date\n
           [B] Find by time spent\n
@@ -37,7 +37,7 @@ def search_options():
         elif choose_search.upper() == "D":
             pattern_search()
         elif choose_search.upper() == "E":
-            clear_screen()
+            utils.clear_screen()
             work_log.main_menu()
         else:
             raise ValueError
@@ -47,14 +47,13 @@ def search_options():
         print("\nYou entered an invalid option")
         repeat = input("Press 'any key' to try again or type QUIT to leave: ")
         if repeat == "":
-            clear_screen()
+            utils.clear_screen()
             search_options()
         elif repeat.upper() == "QUIT":
-            clear_screen()
-            print("Thanks for visiting the worklog!")
-            sys.exit()
+            utils.clear_screen()
+            utils.quit_program()
         else:
-            clear_screen()
+            utils.clear_screen()
             search_options()
         logger.info("User selected {} to fix error.".format(repeat))
 
