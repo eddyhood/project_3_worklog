@@ -95,7 +95,26 @@ def date_search():
 
 def time_search():
     """Searches for past entires based on amount of time logged"""
-    pass
+    utils.clear_screen()
+    print("==========  Find a Worklog Entry by Time Spent  ==========")
+
+    while True:
+        try:
+            search_term = input("Enter time. i.e. [50] for 50 minutes: ")
+        except ValueError:
+            print("Try again.  Remember, you can only enter numbers.")
+        else:
+            break
+    result = []
+    with open("tasklogs.csv") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if re.search(search_term, row["Task Time"]):
+                result.append(row)
+    if result == []:
+        failed_search()
+    else:
+        success_search(result)
 
 
 def exact_search():
