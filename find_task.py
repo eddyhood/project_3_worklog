@@ -1,5 +1,7 @@
 import sys
 import logging
+import re
+import csv
 
 import work_log
 import utils
@@ -42,6 +44,7 @@ logger.addHandler(file_handler)
 # Entries are displayed one at a time with the ability to page through
 # records (previous,next/back).
 
+
 def search_options():
     """Displays the different search options for existing tasks"""
     utils.clear_screen()
@@ -67,7 +70,6 @@ def search_options():
         elif choose_search.upper() == "P":
             pattern_search()
         elif choose_search.upper() == "M":
-            utils.clear_screen()
             work_log.main_menu()
         elif choose_search.upper() == "Q":
             utils.quit_program()
@@ -78,10 +80,7 @@ def search_options():
                        .format(choose_search))
         print("\nYou entered an invalid option")
         repeat = input("Press 'any key' to try again or type QUIT to leave: ")
-        if repeat == "":
-            utils.clear_screen()
-            search_options()
-        elif repeat.upper() == "QUIT":
+        if repeat.upper() == "QUIT":
             utils.clear_screen()
             utils.quit_program()
         else:
@@ -102,9 +101,58 @@ def time_search():
 
 def exact_search():
     """Searches for past entires based on exact match in name or notes"""
-    pass
+    search_term = input("Enter a search term: ")
+    result = []
+    with open("tasklogs.csv") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if re.search(search_term, row["Task Name"]):
+                result.append(row)
+            elif re.search(search_term, row["Task Note"]):
+                result.append(row)
+    if result == []:
+        failed_search()
+    else:
+        success_search(result)
 
 
 def pattern_search():
     """Searches for past entires based on an entered regex pattern"""
     pass
+
+
+def success_search(result):
+    utils.clear_screen()
+    total_results = len(result)
+    ordered_dict = iter(result)
+    next_result = next(ordered_dict)
+    print("""Successful Search! Here's what we found:\n
+          Task Name: {}\n
+          Task Date: {}\n
+          Task Time: {}\n
+          Task Note: {}\n
+          """.format(next_result["Task Name"], next_result["Task Date"],
+                     next_result["Task Time"], next_result["Task Note"]))
+    choice = input("[N]ext [P]revious [M]ain Menu [Q]uit ")
+    if choice.upper() == "N":
+        utils.clear_screen()
+        print(next(ordered_dict))
+    elif choice.upper() == "P":
+        print("Show last task here")
+    elif choice.upper() == "M":
+        work_log.main_menu()
+    elif choice.upper() == "Q":
+        utils.quit_program()
+
+
+def failed_search():
+    utils.clear_screen()
+    print("Bummer! Your search did not return any queries.")
+    print("What would you like to do next?")
+    choice = input("[M]ain Menu [S]earch for more tasks [Q]uit)")
+    if choice.upper() == "M":
+        work_log.main_menu()
+    elif choice.upper() == "S":
+        search_options()
+    elif choice.upper() == "Q":
+        utils.quit_program()
