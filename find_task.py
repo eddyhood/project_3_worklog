@@ -123,18 +123,22 @@ def pattern_search():
 
 
 def success_search(result):
+    """Shows all worklogs found & gives user ability to scroll through them"""
     utils.clear_screen()
-    total_results = len(result)  # Counts total tasks found that match query
+    total_results = len(result)
     display_result(result[0])
     index = 0
 
     while True:
         try:
+            # Show worklog results found in the format 1 of 2.
             if 0 <= index <= (total_results-1):
                 position_index = index + 1
             elif index > total_results:
                 position_index = total_results
             print("Result {} of {}".format(position_index, total_results))
+
+            # Take user input to scroll through tasks or leave view
             choice = input("\n[N]ext [P]revious [M]ain Menu [Q]uit ")
             if choice.upper() == "N":
                 try:
@@ -163,6 +167,7 @@ def success_search(result):
 
 
 def display_result(row):
+    """Generic function to display a task found in a search result"""
     print("""Successful Search! Here's what we found:\n
           Task Name: {}\n
           Task Date: {}\n
@@ -173,6 +178,7 @@ def display_result(row):
 
 
 def failed_search():
+    """Message & options that show when a search function comes up empty"""
     utils.clear_screen()
     print("Bummer! Your search did not return any queries.")
     print("What would you like to do next?")
