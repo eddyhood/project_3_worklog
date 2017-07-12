@@ -1,4 +1,3 @@
-import sys
 import logging
 import re
 import csv
@@ -123,26 +122,41 @@ def pattern_search():
 
 def success_search(result):
     utils.clear_screen()
-    total_results = len(result)
-    ordered_dict = iter(result)
-    next_result = next(ordered_dict)
+    total_results = len(result)  # Counts total tasks found that match query
+    display_result(result[0])
+    index = 0
+
+    while True:
+        try:
+            print("Result {} of {}".format(index+1, total_results))
+            choice = input("[N]ext [P]revious [M]ain Menu [Q]uit ")
+            if choice.upper() == "N":
+                utils.clear_screen()
+                index += 1
+                display_result(result[index])
+            elif choice.upper() == "P":
+                utils.clear_screen()
+                index -= 1
+                display_result(result[index])
+            elif choice.upper() == "M":
+                work_log.main_menu()
+            elif choice.upper() == "Q":
+                utils.quit_program()
+            else:
+                raise ValueError
+        except ValueError:
+            utils.clear_screen()
+            print("Please enter a valid option")
+
+
+def display_result(row):
     print("""Successful Search! Here's what we found:\n
           Task Name: {}\n
           Task Date: {}\n
           Task Time: {}\n
           Task Note: {}\n
-          """.format(next_result["Task Name"], next_result["Task Date"],
-                     next_result["Task Time"], next_result["Task Note"]))
-    choice = input("[N]ext [P]revious [M]ain Menu [Q]uit ")
-    if choice.upper() == "N":
-        utils.clear_screen()
-        print(next(ordered_dict))
-    elif choice.upper() == "P":
-        print("Show last task here")
-    elif choice.upper() == "M":
-        work_log.main_menu()
-    elif choice.upper() == "Q":
-        utils.quit_program()
+          """.format(row["Task Name"], row["Task Date"],
+                     row["Task Time"], row["Task Note"]))
 
 
 def failed_search():
