@@ -1,3 +1,4 @@
+import datetime
 import logging
 import re
 import csv
@@ -48,10 +49,11 @@ def search_options():
     """Displays the different search options for existing tasks"""
     utils.clear_screen()
     print("""Choose a search method:\n
-          [D] Find by date\n
-          [T] Find by time spent\n
-          [E] Find by exact search\n
-          [P] Find by pattern\n
+          [D] Exact date\n
+          [R] Range of dates\n
+          [T] Time spent\n
+          [E] Exact search\n
+          [P] Regex Pattern\n
           [M] Return to main menu\n
           [Q] Quit the program
           """)
@@ -62,6 +64,8 @@ def search_options():
         """Compares answer to options & throws an exception if non-existent"""
         if choose_search.upper() == "D":
             date_search()
+        elif choose_search.upper() == "R":
+            range_search()
         elif choose_search.upper() == "T":
             time_search()
         elif choose_search.upper() == "E":
@@ -91,25 +95,30 @@ def search_options():
 def date_search():
     """Seaches for past entries based on a date range"""
     utils.clear_screen()
-    print("==========  Find a Worklog Entry by Date  ==========")
+    print("==========  Find a Worklog Entry by Exact Date  ==========")
 
     while True:
         try:
-            search_term = input("Enter a date to search by: ")
+            get_date = input("Enter a date as MM/DD/YYYY: ")
+            check = datetime.datetime.strptime(str(get_date), "%m/%d/%Y")
         except ValueError:
-            print("Try again.  Remember, you can only enter numbers.")
+            print("Please enter a valid date as MM/DD/YYYY")
         else:
-            break
-    result = []
-    with open("tasklogs.csv") as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            if re.search(search_term, row["Task Time"]):
-                result.append(row)
-    if result == []:
-        failed_search()
-    else:
-        success_search(result)
+            result = []
+            with open("tasklogs.csv") as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    if re.search(get_date, row["Task Date"]):
+                        result.append(row)
+            if result == []:
+                failed_search()
+            else:
+                success_search(result)
+
+
+def range_search():
+    """Seaches for past entries based on a date range"""
+    pass
 
 
 def time_search():

@@ -53,7 +53,7 @@ class Task:
 
         # Assign attributes to the task instance & log creation
         self.task_name = task_name
-        self.task_date = task_date
+        self.task_date = date
         self.task_time = task_time
         self.task_note = task_note
         logger.info("""User created a complete task with the following info:
