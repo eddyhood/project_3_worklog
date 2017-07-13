@@ -138,7 +138,26 @@ def exact_search():
 
 def pattern_search():
     """Searches for past entires based on an entered regex pattern"""
-    pass
+    utils.clear_screen()
+    print("==========  Find a Worklog Entry by Pattern  ==========")
+    try:
+        result = []
+        search_term = input("Enter a regular expression pattern: ")
+        regex_pattern =re.compile(search_term, re.I)
+
+        with open("tasklogs.csv") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if regex_pattern.search(row["Task Name"]):
+                    result.append(row)
+                elif regex_pattern.search(row["Task Note"]):
+                    result.append(row)
+        if result == []:
+            failed_search()
+        else:
+            success_search(result)
+    except Exception as e:
+        print(e)
 
 
 def success_search(result):
@@ -201,7 +220,7 @@ def failed_search():
     utils.clear_screen()
     print("Bummer! Your search did not return any queries.")
     print("What would you like to do next?")
-    choice = input("[M]ain Menu [S]earch for more tasks [Q]uit)")
+    choice = input("[M]ain Menu [S]earch again [Q]uit ")
     if choice.upper() == "M":
         work_log.main_menu()
     elif choice.upper() == "S":
