@@ -15,36 +15,6 @@ file_handler = logging.FileHandler("logs/find_tasks.log")
 file_handler.setFormatter(fmt)
 logger.addHandler(file_handler)
 
-# When finding previous entry, they can: find by date, find by time spent,
-# find by exact search, find by pattern
-
-# When finding by date, present a list of dates with entries and be able
-# to choose on to see entries from.
-
-# When finding by time spent, user can enter the number of minutes a task took
-# and be able to choose one to see entires from.
-
-# When finding by exact string, user should be allowed to enter a string and
-# then be presented with entries containing that string in the task name
-# or notes.
-
-# When finding by pattern, user should be allowed to enter a regular expression
-# and then be presented with entries matching that pattern in their task
-# name or notes.
-
-# When displaying the entries, the entires should be in a readable format with
-# the date, task name, time spent, and note info.
-
-
-# Entries can be deleted and edited, letting user change the date, task name,
-# time spent, and/or notes.
-
-# Entries can be searched for and found based in a date range. For example,
-# 01/01/2016 and 12/31/2016.
-
-# Entries are displayed one at a time with the ability to page through
-# records (previous,next/back).
-
 
 def search_options():
     """Displays the different search options for existing tasks"""
@@ -143,16 +113,33 @@ def range_search():
             print("#{} - {} = {} log".format(number, date, count))
         else:
             print("#{} - {} = {} logs".format(number, date, count))
-    choose_date = input("\nEnter a [#] to choose date and view logs: ")
 
-
-
-
-
-
+    # Let user choose a date
+    while True:
+        try:
+            choose_date = int(input("Enter a [#] to choose date: "))
+            logger.info("User entered {} to choose a date".format(choose_date))
+        except ValueError:
+            print("Error: i.e. Enter [1] for the first date in the list""")
+        else:
+            break
 
     # Display worklogs for that date
-    # Have menu return to date list
+    result = []
+    get_index = choose_date - 1
+    get_date = list(ordered_dict.keys())[get_index]
+    logger.info("Chosen date is {}".format(get_date))
+
+    # Display all logs for the chose date
+    with open("tasklogs.csv") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if re.search(get_date, row["Task Date"]):
+                result.append(row)
+    if result == []:
+        failed_search()
+    else:
+        success_search(result)
 
 
 def time_search():
