@@ -1,3 +1,4 @@
+import collections
 import datetime
 import logging
 import re
@@ -118,7 +119,40 @@ def date_search():
 
 def range_search():
     """Seaches for past entries based on a date range"""
-    pass
+    # Open csv file and count the number of times each date appears
+    result = []
+    with open("tasklogs.csv") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            result.append(row["Task Date"])
+
+    date_counter = collections.Counter(result)
+    logger.info("Results for date range include: {}".format(date_counter))
+
+    # List dates in #number# order and show count
+    ordered_dict = collections.OrderedDict(sorted(date_counter.items()))
+    logger.info("Ordered Dict is now: {}".format(ordered_dict))
+
+    # Give use menu to choose a date
+    utils.clear_screen()
+    print("=============  Date & Log Entries Include  =============\n")
+    number = 0
+    for date, count in ordered_dict.items():
+        number += 1
+        if count == 1:
+            print("#{} - {} = {} log".format(number, date, count))
+        else:
+            print("#{} - {} = {} logs".format(number, date, count))
+    choose_date = input("\nEnter a [#] to choose date and view logs: ")
+
+
+
+
+
+
+
+    # Display worklogs for that date
+    # Have menu return to date list
 
 
 def time_search():
