@@ -1,12 +1,13 @@
 import collections
+import csv
 import datetime
 import logging
 import re
-import csv
 
 import work_log
 import utils
 
+# Set up custom logger for the module
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -23,7 +24,7 @@ def search_options():
           [D] Exact date\n
           [R] Range of dates\n
           [T] Time spent\n
-          [E] Exact search\n
+          [E] Exact (Phrase) search\n
           [P] Regex Pattern\n
           [M] Return to main menu\n
           [Q] Quit the program
@@ -64,7 +65,7 @@ def search_options():
 
 
 def date_search():
-    """Seaches for past entries based on a date range"""
+    """Seaches for past entries based on an exact date entered"""
     utils.clear_screen()
     print("==========  Find a Worklog Entry by Exact Date  ==========")
 
@@ -103,7 +104,7 @@ def range_search():
     ordered_dict = collections.OrderedDict(sorted(date_counter.items()))
     logger.info("Ordered Dict is now: {}".format(ordered_dict))
 
-    # Give use menu to choose a date
+    # Give user menu to choose a date
     utils.clear_screen()
     print("=============  Date & Log Entries Include  =============\n")
     number = 0
