@@ -90,7 +90,26 @@ def search_options():
 
 def date_search():
     """Seaches for past entries based on a date range"""
-    pass
+    utils.clear_screen()
+    print("==========  Find a Worklog Entry by Date  ==========")
+
+    while True:
+        try:
+            search_term = input("Enter a date to search by: ")
+        except ValueError:
+            print("Try again.  Remember, you can only enter numbers.")
+        else:
+            break
+    result = []
+    with open("tasklogs.csv") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if re.search(search_term, row["Task Time"]):
+                result.append(row)
+    if result == []:
+        failed_search()
+    else:
+        success_search(result)
 
 
 def time_search():
@@ -143,7 +162,7 @@ def pattern_search():
     try:
         result = []
         search_term = input("Enter a regular expression pattern: ")
-        regex_pattern =re.compile(search_term, re.I)
+        regex_pattern = re.compile(search_term, re.I)
 
         with open("tasklogs.csv") as csvfile:
             reader = csv.DictReader(csvfile)
@@ -177,7 +196,7 @@ def success_search(result):
             print("Result {} of {}".format(position_index, total_results))
 
             # Take user input to scroll through tasks or leave view
-            choice = input("\n[N]ext [P]revious [M]ain Menu [Q]uit ")
+            choice = input("\n[N]ext [P]revious [S]earch [M]ain Menu [Q]uit ")
             if choice.upper() == "N":
                 try:
                     utils.clear_screen()
@@ -193,6 +212,8 @@ def success_search(result):
                     utils.clear_screen()
                     index -= 1
                     display_result(result[index])
+            elif choice.upper() == "S":
+                search_options()
             elif choice.upper() == "M":
                 work_log.main_menu()
             elif choice.upper() == "Q":
