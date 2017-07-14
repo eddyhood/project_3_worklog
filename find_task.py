@@ -219,6 +219,41 @@ def pattern_search():
         print(e)
 
 
+def delete_row(row_to_del):
+    filename = "tasklogs.csv"
+    temp_file = "task_temp.csv"
+    with open(filename) as csvin, open(temp_file, "w") as csvout:
+        reader = csv.DictReader(csvin)
+        fieldnames = ["Task Name", "Task Date",
+                      "Task Time", "Task Note", "Task Timestamp"]
+        writer = csv.DictWriter(csvout, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in reader:
+            if row == row_to_del:
+                break
+            else:
+                writer.writerow(row)
+        writer.writerows(reader)
+    os.remove(filename)
+    os.rename(temp_file, filename)
+    utils.clear_screen()
+    print("=========  Log Has Been Deleted  =========")
+    print("""What would you like to do next?\n
+          [M]ain Menu\n
+          [A]dd log\n
+          [S]earch log\n
+          [Q]uit program""")
+    get_choice = input("Choose an option: ")
+    if get_choice.upper() == "M":
+        work_log.main_menu()
+    elif get_choice.upper() == "A":
+        add_task.Task()
+    elif get_choice.upper() == "S":
+        search_options()
+    elif get_choice.upper() == "Q":
+        utils.quit_program()
+
+
 def success_search(result):
     """Shows all worklogs found & gives user ability to scroll through them"""
     utils.clear_screen()
@@ -236,7 +271,7 @@ def success_search(result):
             print("Result {} of {}".format(position_index, total_results))
 
             # Take user input to scroll through tasks or leave view
-            choice = input("\n[N]ext [P]revious [E]dit [M]ain Menu [Q]uit ")
+            choice = input("\n[N]ext [P]revious [E]dit [D]elete [M]ain Menu [Q]uit ")
             if choice.upper() == "N":
                 try:
                     utils.clear_screen()
@@ -254,6 +289,8 @@ def success_search(result):
                     display_result(result[index])
             elif choice.upper() == "E":
                 edit_log(result[index])
+            elif choice.upper() == "D":
+                delete_row(result[index])
             elif choice.upper() == "M":
                 work_log.main_menu()
             elif choice.upper() == "Q":
@@ -337,7 +374,6 @@ def edit_log(log_to_edit):
         writer.writeheader()
         for row in reader:
             if row["Task Timestamp"] == lookup[4]:
-                logger.info("This is the row we got: {}".format(row))
                 writer.writerow({
                                 "Task Name": lookup[0],
                                 "Task Date": lookup[1],
