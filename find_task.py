@@ -38,27 +38,28 @@ def search_options():
 
 def search_choice(user_choice):
     """Launch search method based on user's choice"""
-    try:
-        if user_choice.upper() == "A":
-            date_search()
-        elif user_choice.upper() == "B":
-            date_counter()
-        elif user_choice.upper() == "C":
-            time_search()
-        elif user_choice.upper() == "D":
-            exact_search()
-        elif user_choice.upper() == "E":
-            pattern_search()
-        elif user_choice.upper() == "F":
-            work_log.main_menu()
-        elif user_choice.upper() == "G":
-            utils.quit_program()
-        else:
-            raise ValueError
-    except ValueError:
-        logger.warning("Exception raised.  User typed {} for a search method."
-                       .format(user_choice))
-        print("\nYou entered an invalid option")
+    while True:
+        try:
+            if user_choice.upper() == "A":
+                date_search()
+            elif user_choice.upper() == "B":
+                date_counter()
+            elif user_choice.upper() == "C":
+                time_search()
+            elif user_choice.upper() == "D":
+                exact_search()
+            elif user_choice.upper() == "E":
+                pattern_search()
+            elif user_choice.upper() == "F":
+                work_log.main_menu()
+            elif user_choice.upper() == "G":
+                utils.quit_program()
+            else:
+                raise ValueError
+        except ValueError:
+            logger.warning("Exception. User typed {} for a search method."
+                           .format(user_choice))
+            print("\nYou entered an invalid option")
         repeat = input("Press 'any key' to try again or type QUIT to leave: ")
         if repeat.upper() == "QUIT":
             utils.clear_screen()
@@ -76,25 +77,33 @@ def date_search():
 
     # Get date ranges from user
     print("\nEnter dates in the MM/DD/YYYY Format\n")
-    try:
-        start_date = input("Enter a start date: ")
-        dt_start_date = datetime.datetime.strptime(str(start_date), "%m/%d/%Y")
-    except ValueError:
-        print("Please enter a valid date as MM/DD/YYYY")
+    while True:
+        try:
+            start_date = input("Enter a start date: ")
+            dt_start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
+            logger.info("Start date is {}".format(dt_start_date))
+        except ValueError:
+            print("Please enter a valid date as MM/DD/YYYY")
+        else:
+            break
+    while True:
+        try:
+            end_date = input("Enter an end date: ")
+            dt_end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
+            logger.info("End date is {}".format(dt_end_date))
+        except ValueError:
+            print("Please enter a valid date as MM/DD/YYYY")
+        else:
+            break
 
-    try:
-        end_date = input("Enter an end date:")
-        dt_end_date = datetime.datetime.strptime(str(end_date), "%m/%d/%Y")
-    except ValueError:
-        print("Please enter a valid date as MM/DD/YYYY")
-
-    # Find rows that have dates within the date rangen
+        # Find rows that have dates within the date rangen
     result = []
     with open("tasklogs.csv") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             row_d = datetime.datetime.strptime(row["Task Date DT"],
-                                               "%Y-%m-%d %H:%M:%S")
+                                               "%m/%d/%y %H:%M")
+            logger.info("Row d is: {}".format(row_d))
             if dt_start_date <= row_d and dt_end_date >= row_d:
                 result.append(row)
     if result == []:
@@ -229,6 +238,7 @@ def pattern_search():
 
 
 def delete_row(row_to_del):
+    """Deletes a row from the csv log based on user's request"""
     filename = "tasklogs.csv"
     temp_file = "task_temp.csv"
     with open(filename) as csvin, open(temp_file, "w") as csvout:

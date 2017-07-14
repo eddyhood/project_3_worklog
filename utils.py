@@ -23,7 +23,7 @@ def footer_menu():
     print("Choose An Option Below\n")
     while True:
         try:
-            wrap_up = input("[M]ain Menu, [A]dd task, [S]earch task, [Q]uit: ")
+            wrap_up = input("[M]ain Menu, [A]dd log, [S]earch logs, [Q]uit: ")
             if wrap_up.upper() == "M":
                 work_log.main_menu()
             elif wrap_up.upper() == "A":

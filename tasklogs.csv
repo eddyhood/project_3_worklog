@@ -1,6 +1,9 @@
 Task Name,Task Date,Task Date DT,Task Time,Task Note,Task Timestamp
-Learn to code with Python,12/31/2017,2017-12-31 00:00:00,1500,Learn with Kenneth Love,2017-07-14 09:30:32.594779
-q,12/1/2019,2019-12-01 00:00:00,1,1,2017-07-14 09:34:05.637608
-Get a new phone number at 801-555-5555,10/18/2018,2018-10-18 00:00:00,30,Get it at T-Mobile,2017-07-14 09:43:45.084639
-Refactor the code,07/14/2017,2017-07-14 00:00:00,100,Make it easier to read,2017-07-14 09:50:28.084577
-Change the # again to (801)-546-9999,10/15/2015,,30,Get a new number!,
+Learn to code with Python,12/31/17,12/31/17 0:00,1500,Learn with Kenneth Love,30:32.6
+Get a new phone number at 801-555-5555,10/18/18,10/18/18 0:00,30,Get it at T-Mobile,43:45.1
+Refactor the code,7/14/17,7/14/17 0:00,100,Make it easier to read,50:28.1
+Worked on client ABC,7/15/17,7/15/17 0:00,300,It was really hard,08:21.8
+Go for a hike,10/15/25,10/15/25 0:00,100,Have fun!,34:44.3
+Make a sandwich,10/15/25,10/15/25 0:00,10,Use extra meat,35:08.0
+Write an application,10/15/25,10/15/25 0:00,40,Make it awesome,36:10.4
+Test your code,12/31/17,12/31/17 0:00,2000,I love testing,36:49.5
