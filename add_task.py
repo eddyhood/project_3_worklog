@@ -1,6 +1,7 @@
 import csv
 import logging
 import datetime
+import os
 
 import utils
 
@@ -68,22 +69,28 @@ class Task:
         self.success_add()
 
     def write_task(self):
-        """Writes the task to the log file"""
-        with open("tasklogs.csv", "a", newline="") as csvfile:
+        filename = "tasklogs.csv"
+        temp_file = "task_temp.csv"
+        with open(filename) as csvin, open(temp_file, "w") as csvout:
+            reader = csv.DictReader(csvin)
             fieldnames = ["Task Name", "Task Date", "Task Date DT",
                           "Task Time", "Task Note", "Task Timestamp"]
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer = csv.DictWriter(csvout, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in reader:
+                writer.writerow(row)
             writer.writerow({
-                        "Task Name": self.task_name,
-                        "Task Date": self.task_date,
-                        "Task Date DT": self.task_date_dt,
-                        "Task Time": self.task_time,
-                        "Task Note": self.task_note,
-                        "Task Timestamp": self.task_timestamp,
-                        })
-            csvfile.close()
-            logger.info("Task {} was recorded in the log.".format
-                        (self.task_name))
+                "Task Name": self.task_name,
+                "Task Date": self.task_date,
+                "Task Date DT": self.task_date_dt,
+                "Task Time": self.task_time,
+                "Task Note": self.task_note,
+                "Task Timestamp": self.task_timestamp,
+                })
+            writer.writerows(reader)
+        os.remove(filename)
+        os.rename(temp_file, filename)
+        utils.clear_screen()
 
     def success_add(self):
         """Prints a success message for when a task is added"""

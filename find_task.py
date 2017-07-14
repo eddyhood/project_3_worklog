@@ -96,7 +96,7 @@ def date_search():
         else:
             break
 
-        # Find rows that have dates within the date rangen
+    # Find rows that have dates within the date rangen
     result = []
     with open("tasklogs.csv") as csvfile:
         reader = csv.DictReader(csvfile)
