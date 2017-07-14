@@ -33,28 +33,31 @@ def search_options():
           """)
     choose_search = input("Select an option: ")
     logger.info("User selected {} for a search method.".format(choose_search))
+    search_choice(choose_search)
 
+
+def search_choice(user_choice):
+    """Launch search method based on user's choice"""
     try:
-        """Compares answer to options & throws an exception if non-existent"""
-        if choose_search.upper() == "D":
+        if user_choice.upper() == "D":
             date_search()
-        elif choose_search.upper() == "R":
-            range_search()
-        elif choose_search.upper() == "T":
+        elif user_choice.upper() == "R":
+            date_counter()
+        elif user_choice.upper() == "T":
             time_search()
-        elif choose_search.upper() == "E":
+        elif user_choice.upper() == "E":
             exact_search()
-        elif choose_search.upper() == "P":
+        elif user_choice.upper() == "P":
             pattern_search()
-        elif choose_search.upper() == "M":
+        elif user_choice.upper() == "M":
             work_log.main_menu()
-        elif choose_search.upper() == "Q":
+        elif user_choice.upper() == "Q":
             utils.quit_program()
         else:
             raise ValueError
     except ValueError:
         logger.warning("Exception raised.  User typed {} for a search method."
-                       .format(choose_search))
+                       .format(user_choice))
         print("\nYou entered an invalid option")
         repeat = input("Press 'any key' to try again or type QUIT to leave: ")
         if repeat.upper() == "QUIT":
@@ -70,13 +73,14 @@ def date_search():
     """Seaches for past entries based on an exact date entered"""
     utils.clear_screen()
     print("==========  Find a Worklog Entry by Exact Date  ==========")
-
     while True:
+        # Get date and make sure it's in correct format or throw error
         try:
             get_date = input("Enter a date as MM/DD/YYYY: ")
-            check = datetime.datetime.strptime(str(get_date), "%m/%d/%Y")
+            datetime.datetime.strptime(str(get_date), "%m/%d/%Y")
         except ValueError:
             print("Please enter a valid date as MM/DD/YYYY")
+        # Look for date in csv file and call failed search or success search
         else:
             result = []
             with open("tasklogs.csv") as csvfile:
@@ -90,23 +94,22 @@ def date_search():
                 success_search(result)
 
 
-def range_search():
-    """Seaches for past entries based on a date range"""
-    # Open csv file and count the number of times each date appears
+def date_counter():
+    """Step#1 of date range serach: Open CSV file and count # of dates"""
     result = []
     with open("tasklogs.csv") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             result.append(row["Task Date"])
     csvfile.close()
-    date_counter = collections.Counter(result)
+    date_count = collections.Counter(result)
     logger.info("Results for date range include: {}".format(date_counter))
+    date_lister(date_count)
 
-    # List dates in #number# order and show count
-    ordered_dict = collections.OrderedDict(sorted(date_counter.items()))
-    logger.info("Ordered Dict is now: {}".format(ordered_dict))
 
-    # Give user menu to choose a date
+def date_lister(date_count):
+    """Step #2 of date range search: Show dates and total logs per date"""
+    ordered_dict = collections.OrderedDict(sorted(date_count.items()))
     utils.clear_screen()
     print("=============  Date & Log Entries Include  =============\n")
     number = 0
@@ -116,8 +119,11 @@ def range_search():
             print("#{} - {} = {} log".format(number, date, count))
         else:
             print("#{} - {} = {} logs".format(number, date, count))
+    date_chooser(ordered_dict)
 
-    # Let user choose a date
+
+def date_chooser(ordered_dict):
+    """Step #3 of date range search: Let user choose a date to view"""
     while True:
         try:
             choose_date = int(input("\nEnter [#] to see logs for that date: "))
@@ -126,14 +132,15 @@ def range_search():
             print("Error: i.e. Enter [1] for the first date in the list""")
         else:
             break
-
-    # Display worklogs for that date
-    result = []
     get_index = choose_date - 1
     get_date = list(ordered_dict.keys())[get_index]
     logger.info("Chosen date is {}".format(get_date))
+    display_logs(get_date)
 
-    # Display all logs for the chose date
+
+def display_logs(get_date):
+    """Step #4 of date range search: Display all logs for the chose date"""
+    result = []
     with open("tasklogs.csv") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:

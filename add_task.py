@@ -1,7 +1,6 @@
 import csv
 import logging
 import datetime
-import pytz
 
 import find_task
 import utils
@@ -51,7 +50,7 @@ class Task:
         task_note = (input("Enter a optional notes: "))
         logger.info("Valid note created as {}".format(task_note))
 
-        #create a unique timestamp for when the task is created
+        # create a unique timestamp for when the task is created
         timestamp = datetime.datetime.now()
 
         # Assign attributes to the task instance & log creation
@@ -86,7 +85,7 @@ class Task:
                         (self.task_name))
 
     def success_add(self):
-        """Prints a success message for when a task is added and redirects user"""
+        """Prints a success message for when a task is added"""
         utils.clear_screen()
         print("""You have successfully entered the following task:\n
               Task name: {}
