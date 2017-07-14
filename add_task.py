@@ -96,21 +96,4 @@ class Task:
               Task note: {}
               """.format(self.task_name, self.task_date, self.task_time,
                          self.task_note))
-        try:
-            print("What would you like to do next?")
-            wrap_up = input("[M]ain Menu, [A]dd task, [S]earch task, [Q]uit: ")
-            if wrap_up.upper() == "M":
-                work_log.main_menu()
-            elif wrap_up.upper() == "A":
-                Task()
-            elif wrap_up.upper() == "S":
-                find_task.search_options()
-            elif wrap_up.upper() == "Q":
-                utils.clear_screen()
-                utils.quit_program()
-            else:
-                raise ValueError
-        except ValueError:
-            utils.clear_screen()
-            print("\n***PLEASE ENTER A VALID OPTION***\n")
-            self.success_add()
+        utils.footer_menu()

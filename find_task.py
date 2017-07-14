@@ -320,14 +320,7 @@ def failed_search():
     """Message & options that show when a search function comes up empty"""
     utils.clear_screen()
     print("Bummer! Your search did not return any queries.")
-    print("What would you like to do next?")
-    choice = input("[M]ain Menu [S]earch again [Q]uit: ")
-    if choice.upper() == "M":
-        work_log.main_menu()
-    elif choice.upper() == "S":
-        search_options()
-    elif choice.upper() == "Q":
-        utils.quit_program()
+    utils.footer_menu()
 
 
 def edit_log(log_to_edit):
@@ -403,19 +396,4 @@ def display_edit(lookup):
           Task Time: {}\n
           Task Note: {}\n
           """.format(lookup[0], lookup[1], lookup[3], lookup[4]))
-    print("[A]dd Task [S]earch Task [M]ain Menu [Q]uit")
-    get_choice = input("Choose an Option:")
-    while True:
-        try:
-            if get_choice.upper() == "A":
-                add_task.Task()
-            elif get_choice.upper() == "S":
-                search_options()
-            elif get_choice.upper() == "M":
-                work_log.main_menu()
-            elif get_choice.upper() == "Q":
-                utils.quit_program()
-            else:
-                raise ValueError
-        except ValueError:
-            print("Please enter a valid option")
+    utils.footer_menu()
