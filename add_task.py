@@ -29,7 +29,7 @@ class Task:
         while True:
             try:
                 date = (input("Enter the task date (Use MM/DD/YYYY): "))
-                task_date = datetime.datetime.strptime(str(date), "%m/%d/%Y")
+                task_date = datetime.datetime.strptime(date, "%m/%d/%Y")
             except ValueError:
                 print("Pleae Enter a valid date in the format MM/DD/YYYY")
             else:

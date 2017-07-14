@@ -72,26 +72,35 @@ def search_choice(user_choice):
 def date_search():
     """Seaches for past entries based on an exact date entered"""
     utils.clear_screen()
-    print("==========  Find a Worklog Entry by Exact Date  ==========")
-    while True:
-        # Get date and make sure it's in correct format or throw error
-        try:
-            get_date = input("Enter a date as MM/DD/YYYY: ")
-            datetime.datetime.strptime(str(get_date), "%m/%d/%Y")
-        except ValueError:
-            print("Please enter a valid date as MM/DD/YYYY")
-        # Look for date in csv file and call failed search or success search
-        else:
-            result = []
-            with open("tasklogs.csv") as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    if re.search(get_date, row["Task Date"]):
-                        result.append(row)
-            if result == []:
-                failed_search()
-            else:
-                success_search(result)
+    print("==========  Find a Worklog Entry by Date Range  ==========")
+
+    # Get date ranges from user
+    print("\nEnter dates in the MM/DD/YYYY Format\n")
+    try:
+        start_date = input("Enter a start date: ")
+        dt_start_date = datetime.datetime.strptime(str(start_date), "%m/%d/%Y")
+    except ValueError:
+        print("Please enter a valid date as MM/DD/YYYY")
+
+    try:
+        end_date = input("Enter an end date:")
+        dt_end_date = datetime.datetime.strptime(str(end_date), "%m/%d/%Y")
+    except ValueError:
+        print("Please enter a valid date as MM/DD/YYYY")
+
+    # Find rows that have dates within the date rangen
+    result = []
+    with open("tasklogs.csv") as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            row_d = datetime.datetime.strptime(row["Task Date DT"],
+                                               "%Y-%m-%d %H:%M:%S")
+            if dt_start_date <= row_d and dt_end_date >= row_d:
+                result.append(row)
+    if result == []:
+        failed_search()
+    else:
+        success_search(result)
 
 
 def date_counter():
