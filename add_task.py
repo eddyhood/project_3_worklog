@@ -29,11 +29,11 @@ class Task:
         while True:
             try:
                 date = (input("Enter the task date (Use MM/DD/YYYY): "))
-                task_date = datetime.datetime.strptime(date, "%m/%d/%Y")
+                utc_task_date = utils.utc_date(date)
             except ValueError:
                 print("Pleae Enter a valid date in the format MM/DD/YYYY")
             else:
-                logger.info("Valid date created as {}".format(task_date))
+                logger.info("Valid date created as {}".format(utc_task_date))
                 break
 
         # Gets number of minutes task took and stores it as an int
@@ -56,14 +56,11 @@ class Task:
         # Assign attributes to the task instance & log creation
         self.task_name = task_name
         self.task_date = date
-        self.task_date_dt = task_date
+        self.task_date_utc = utc_task_date
         self.task_time = task_time
         self.task_note = task_note
         self.task_timestamp = timestamp
-        logger.info("""User created a complete task with the following info:
-                    Task Name: {}, Task Date: {}, Task Time: {},
-                    Task Note: {}""".format(self.task_name, self.task_date,
-                                            self.task_time, self.task_note))
+
         # Call functions to write task to file and show success
         self.write_task()
         self.success_add()
@@ -73,7 +70,7 @@ class Task:
         temp_file = "task_temp.csv"
         with open(filename) as csvin, open(temp_file, "w") as csvout:
             reader = csv.DictReader(csvin)
-            fieldnames = ["Task Name", "Task Date", "Task Date DT",
+            fieldnames = ["Task Name", "Task Date", "Task Date UTC",
                           "Task Time", "Task Note", "Task Timestamp"]
             writer = csv.DictWriter(csvout, fieldnames=fieldnames)
             writer.writeheader()
@@ -82,7 +79,7 @@ class Task:
             writer.writerow({
                 "Task Name": self.task_name,
                 "Task Date": self.task_date,
-                "Task Date DT": self.task_date_dt,
+                "Task Date UTC": self.task_date_utc,
                 "Task Time": self.task_time,
                 "Task Note": self.task_note,
                 "Task Timestamp": self.task_timestamp,

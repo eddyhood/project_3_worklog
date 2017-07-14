@@ -1,9 +1,2 @@
-Task Name,Task Date,Task Date DT,Task Time,Task Note,Task Timestamp
-Learn to code with Python,12/31/17,12/31/17 0:00,1500,Learn with Kenneth Love,30:32.6
-Get a new phone number at 801-555-5555,10/18/18,10/18/18 0:00,30,Get it at T-Mobile,43:45.1
-Refactor the code,7/14/17,7/14/17 0:00,100,Make it easier to read,50:28.1
-Worked on client ABC,7/15/17,7/15/17 0:00,300,It was really hard,08:21.8
-Go for a hike,10/15/25,10/15/25 0:00,100,Have fun!,34:44.3
-Make a sandwich,10/15/25,10/15/25 0:00,10,Use extra meat,35:08.0
-Write an application,10/15/25,10/15/25 0:00,40,Make it awesome,36:10.4
-Try this on for size,07/14/2017,2017-07-14 00:00:00,10,Here we go,2017-07-14 11:44:17.799197
+Task Name,Task Date,Task Date UTC,Task Time,Task Note,Task Timestamp
+Convert times to UTC,07/14/2017,2017-07-14 06:00:00+00:00,50,Its awesome,2017-07-14 16:08:14.360931

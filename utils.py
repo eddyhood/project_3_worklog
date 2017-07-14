@@ -1,5 +1,7 @@
+import datetime
 import sys
 import os
+import pytz
 
 import work_log
 import add_task
@@ -41,3 +43,12 @@ def footer_menu():
         else:
             clear_screen()
             break
+
+
+def utc_date(date):
+    """Convert a date from user into UTC time"""
+    date = datetime.datetime.strptime(date, "%m/%d/%Y")
+    utc_date = date.astimezone(pytz.utc)
+    return(utc_date)
+
+

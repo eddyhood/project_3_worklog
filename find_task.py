@@ -3,6 +3,7 @@ import csv
 import datetime
 import logging
 import os
+import pytz
 import re
 
 import add_task
@@ -71,17 +72,15 @@ def search_choice(user_choice):
 
 
 def date_search():
-    """Seaches for past entries based on an exact date entered"""
+    """Seach for past entries based on a date range"""
     utils.clear_screen()
     print("==========  Find a Worklog Entry by Date Range  ==========")
-
     # Get date ranges from user
     print("\nEnter dates in the MM/DD/YYYY Format\n")
     while True:
         try:
             start_date = input("Enter a start date: ")
-            dt_start_date = datetime.datetime.strptime(start_date, "%m/%d/%Y")
-            logger.info("Start date is {}".format(dt_start_date))
+            utc_start_date = utils.utc_date(start_date)
         except ValueError:
             print("Please enter a valid date as MM/DD/YYYY")
         else:
@@ -89,8 +88,7 @@ def date_search():
     while True:
         try:
             end_date = input("Enter an end date: ")
-            dt_end_date = datetime.datetime.strptime(end_date, "%m/%d/%Y")
-            logger.info("End date is {}".format(dt_end_date))
+            utc_end_date = utils.utc_date(end_date)
         except ValueError:
             print("Please enter a valid date as MM/DD/YYYY")
         else:
@@ -101,10 +99,8 @@ def date_search():
     with open("tasklogs.csv") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            row_d = datetime.datetime.strptime(row["Task Date DT"],
-                                               "%m/%d/%y %H:%M")
-            logger.info("Row d is: {}".format(row_d))
-            if dt_start_date <= row_d and dt_end_date >= row_d:
+            date_utc = utils.utc_date(row["Task Date"])
+            if utc_start_date <= date_utc <= utc_end_date:
                 result.append(row)
     if result == []:
         failed_search()
@@ -243,7 +239,7 @@ def delete_row(row_to_del):
     temp_file = "task_temp.csv"
     with open(filename) as csvin, open(temp_file, "w") as csvout:
         reader = csv.DictReader(csvin)
-        fieldnames = ["Task Name", "Task Date", "Task Date DT",
+        fieldnames = ["Task Name", "Task Date", "Task Date UTC",
                       "Task Time", "Task Note", "Task Timestamp"]
         writer = csv.DictWriter(csvout, fieldnames=fieldnames)
         writer.writeheader()
@@ -374,7 +370,7 @@ def edit_log(log_to_edit):
     temp_file = "task_temp.csv"
     with open(filename) as csvin, open(temp_file, "w") as csvout:
         reader = csv.DictReader(csvin)
-        fieldnames = ["Task Name", "Task Date", "Task Date DT",
+        fieldnames = ["Task Name", "Task Date", "Task Date UTC",
                       "Task Time", "Task Note", "Task Timestamp"]
         writer = csv.DictWriter(csvout, fieldnames=fieldnames)
         writer.writeheader()
