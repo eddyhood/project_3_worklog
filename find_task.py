@@ -5,6 +5,7 @@ import logging
 import os
 import re
 
+import add_task
 import work_log
 import utils
 
@@ -98,7 +99,6 @@ def range_search():
         for row in reader:
             result.append(row["Task Date"])
     csvfile.close()
-
     date_counter = collections.Counter(result)
     logger.info("Results for date range include: {}".format(date_counter))
 
@@ -120,7 +120,7 @@ def range_search():
     # Let user choose a date
     while True:
         try:
-            choose_date = int(input("Enter a [#] to choose date: "))
+            choose_date = int(input("\nEnter [#] to see logs for that date: "))
             logger.info("User entered {} to choose a date".format(choose_date))
         except ValueError:
             print("Error: i.e. Enter [1] for the first date in the list""")
@@ -322,12 +322,12 @@ def edit_log(log_to_edit):
     # Write user edit to log in csv file
     filename = "tasklogs.csv"
     temp_file = "task_temp.csv"
-
     with open(filename) as csvin, open(temp_file, "w") as csvout:
         reader = csv.DictReader(csvin)
         fieldnames = ["Task Name", "Task Date",
-                          "Task Time", "Task Note", "Task Timestamp"]
+                      "Task Time", "Task Note", "Task Timestamp"]
         writer = csv.DictWriter(csvout, fieldnames=fieldnames)
+        writer.writeheader()
         for row in reader:
             if row["Task Timestamp"] == lookup[4]:
                 logger.info("This is the row we got: {}".format(row))
@@ -343,11 +343,33 @@ def edit_log(log_to_edit):
         writer.writerows(reader)
     os.remove(filename)
     os.rename(temp_file, filename)
+    display_edit(lookup)
 
 
-
-
-
-
-
-    present_menu = input("Would you like to see your edited task?")
+def display_edit(lookup):
+    """Shows congratulation message and edited log"""
+    utils.clear_screen()
+    print("=======  Congratulations! Your Log Was Edited  =======")
+    print("You can review your changes below:")
+    print("""
+          Task Name: {}\n
+          Task Date: {}\n
+          Task Time: {}\n
+          Task Note: {}\n
+          """.format(lookup[0], lookup[1], lookup[2], lookup[3]))
+    print("[A]dd Task [S]earch Task [M]ain Menu [Q]uit")
+    get_choice = input("Choose an Option:")
+    while True:
+        try:
+            if get_choice.upper() == "A":
+                add_task.Task()
+            elif get_choice.upper() == "S":
+                search_options()
+            elif get_choice.upper() == "M":
+                work_log.main_menu()
+            elif get_choice.upper() == "Q":
+                utils.quit_program()
+            else:
+                raise ValueError
+        except ValueError:
+            print("Please enter a valid option")

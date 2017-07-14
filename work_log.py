@@ -21,13 +21,8 @@ def main_menu():
     while True:
         try:
             # Present main menu to user
-            goal = input("""
-                What would you like to do?\n
-                [A]dd a new entry\n
-                [S]earch logs\n
-                [Q]uit\n
-                Select an option:
-                """)
+            print("\n[A]dd entry\n[S]earch logs\n[Q]uit\n\n")
+            goal = input("Select an option: ")
             logger.info("User selected {} on main menu.".format(goal))
 
             # Compares answer to options and thows an exception if missing
