@@ -2,6 +2,7 @@ import collections
 import csv
 import datetime
 import logging
+import os
 import re
 
 import work_log
@@ -96,6 +97,7 @@ def range_search():
         reader = csv.DictReader(csvfile)
         for row in reader:
             result.append(row["Task Date"])
+    csvfile.close()
 
     date_counter = collections.Counter(result)
     logger.info("Results for date range include: {}".format(date_counter))
@@ -227,7 +229,7 @@ def success_search(result):
             print("Result {} of {}".format(position_index, total_results))
 
             # Take user input to scroll through tasks or leave view
-            choice = input("\n[N]ext [P]revious [S]earch [M]ain Menu [Q]uit ")
+            choice = input("\n[N]ext [P]revious [E]dit [M]ain Menu [Q]uit ")
             if choice.upper() == "N":
                 try:
                     utils.clear_screen()
@@ -243,8 +245,8 @@ def success_search(result):
                     utils.clear_screen()
                     index -= 1
                     display_result(result[index])
-            elif choice.upper() == "S":
-                search_options()
+            elif choice.upper() == "E":
+                edit_log(result[index])
             elif choice.upper() == "M":
                 work_log.main_menu()
             elif choice.upper() == "Q":
@@ -279,3 +281,73 @@ def failed_search():
         search_options()
     elif choice.upper() == "Q":
         utils.quit_program()
+
+
+def edit_log(log_to_edit):
+    """Allows user to edit a log entry"""
+    utils.clear_screen()
+    lookup = list(log_to_edit.values())
+    logger.info("Lookup list = {}".format(lookup))
+
+    # Present user with a menu of options for the edit
+    print(""""You have chosen to edit the following tasK:\n
+          [A] Task Name: {}\n
+          [B] Task Date: {}\n
+          [C] Task Time: {}\n
+          [D] Task Note: {}\n
+          """.format(lookup[0], lookup[1],
+                     lookup[2], lookup[3]))
+
+    # Get user's edit value
+    get_choice = input("Enter an option to edit: ")
+    try:
+        if get_choice.upper() == "A":
+            get_name = input("Enter a new task name: ")
+            lookup[0] = get_name
+        elif get_choice.upper() == "B":
+            get_date = input("Enter a new task date as MM/DD/YYYY: ")
+            lookup[1] = get_date
+        elif get_choice.upper() == "C":
+            get_time = int(input("Enter a new time: "))
+            lookup[2] = get_time
+        elif get_choice.upper() == "D":
+            get_note = input("Enter a new task note: ")
+            lookup[3] = get_note
+        else:
+            raise ValueError
+    except ValueError:
+        print("Whoops! Please enter a valid option to edit.")
+    logger.info("After edits, log will be: {}".format(lookup))
+
+    # Write user edit to log in csv file
+    filename = "tasklogs.csv"
+    temp_file = "task_temp.csv"
+
+    with open(filename) as csvin, open(temp_file, "w") as csvout:
+        reader = csv.DictReader(csvin)
+        fieldnames = ["Task Name", "Task Date",
+                          "Task Time", "Task Note", "Task Timestamp"]
+        writer = csv.DictWriter(csvout, fieldnames=fieldnames)
+        for row in reader:
+            if row["Task Timestamp"] == lookup[4]:
+                logger.info("This is the row we got: {}".format(row))
+                writer.writerow({
+                                "Task Name": lookup[0],
+                                "Task Date": lookup[1],
+                                "Task Time": lookup[2],
+                                "Task Note": lookup[3]
+                                })
+                break
+            else:
+                writer.writerow(row)
+        writer.writerows(reader)
+    os.remove(filename)
+    os.rename(temp_file, filename)
+
+
+
+
+
+
+
+    present_menu = input("Would you like to see your edited task?")
