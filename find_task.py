@@ -224,7 +224,7 @@ def delete_row(row_to_del):
     temp_file = "task_temp.csv"
     with open(filename) as csvin, open(temp_file, "w") as csvout:
         reader = csv.DictReader(csvin)
-        fieldnames = ["Task Name", "Task Date",
+        fieldnames = ["Task Name", "Task Date", "Task Date DT",
                       "Task Time", "Task Note", "Task Timestamp"]
         writer = csv.DictWriter(csvout, fieldnames=fieldnames)
         writer.writeheader()
@@ -334,7 +334,7 @@ def edit_log(log_to_edit):
           [C] Task Time: {}\n
           [D] Task Note: {}\n
           """.format(lookup[0], lookup[1],
-                     lookup[2], lookup[3]))
+                     lookup[3], lookup[4]))
 
     # Get user's edit value
     get_choice = input("Enter an option to edit: ")
@@ -347,10 +347,10 @@ def edit_log(log_to_edit):
             lookup[1] = get_date
         elif get_choice.upper() == "C":
             get_time = int(input("Enter a new time: "))
-            lookup[2] = get_time
+            lookup[3] = get_time
         elif get_choice.upper() == "D":
             get_note = input("Enter a new task note: ")
-            lookup[3] = get_note
+            lookup[4] = get_note
         else:
             raise ValueError
     except ValueError:
@@ -362,17 +362,17 @@ def edit_log(log_to_edit):
     temp_file = "task_temp.csv"
     with open(filename) as csvin, open(temp_file, "w") as csvout:
         reader = csv.DictReader(csvin)
-        fieldnames = ["Task Name", "Task Date",
+        fieldnames = ["Task Name", "Task Date", "Task Date DT",
                       "Task Time", "Task Note", "Task Timestamp"]
         writer = csv.DictWriter(csvout, fieldnames=fieldnames)
         writer.writeheader()
         for row in reader:
-            if row["Task Timestamp"] == lookup[4]:
+            if row["Task Timestamp"] == lookup[5]:
                 writer.writerow({
                                 "Task Name": lookup[0],
                                 "Task Date": lookup[1],
-                                "Task Time": lookup[2],
-                                "Task Note": lookup[3]
+                                "Task Time": lookup[3],
+                                "Task Note": lookup[4]
                                 })
                 break
             else:
@@ -393,7 +393,7 @@ def display_edit(lookup):
           Task Date: {}\n
           Task Time: {}\n
           Task Note: {}\n
-          """.format(lookup[0], lookup[1], lookup[2], lookup[3]))
+          """.format(lookup[0], lookup[1], lookup[3], lookup[4]))
     print("[A]dd Task [S]earch Task [M]ain Menu [Q]uit")
     get_choice = input("Choose an Option:")
     while True:

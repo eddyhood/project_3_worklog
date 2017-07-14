@@ -56,6 +56,7 @@ class Task:
         # Assign attributes to the task instance & log creation
         self.task_name = task_name
         self.task_date = date
+        self.task_date_dt = task_date
         self.task_time = task_time
         self.task_note = task_note
         self.task_timestamp = timestamp
@@ -70,12 +71,13 @@ class Task:
     def write_task(self):
         """Writes the task to the log file"""
         with open("tasklogs.csv", "a", newline="") as csvfile:
-            fieldnames = ["Task Name", "Task Date",
+            fieldnames = ["Task Name", "Task Date", "Task Date DT",
                           "Task Time", "Task Note", "Task Timestamp"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writerow({
                         "Task Name": self.task_name,
                         "Task Date": self.task_date,
+                        "Task Date DT": self.task_date_dt,
                         "Task Time": self.task_time,
                         "Task Note": self.task_note,
                         "Task Timestamp": self.task_timestamp,
