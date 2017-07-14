@@ -23,13 +23,13 @@ def search_options():
     """Displays the different search options for existing tasks"""
     utils.clear_screen()
     print("""Choose a search method:\n
-          [D] Exact date\n
-          [R] Range of dates\n
-          [T] Time spent\n
-          [E] Exact (Phrase) search\n
-          [P] Regex Pattern\n
-          [M] Return to main menu\n
-          [Q] Quit the program
+          [A] Date Range\n
+          [B] Logs by Date\n
+          [C] Time spent\n
+          [D] Exact (Phrase) search\n
+          [E] Regex Pattern\n
+          [F] Return to main menu\n
+          [G] Quit the program
           """)
     choose_search = input("Select an option: ")
     logger.info("User selected {} for a search method.".format(choose_search))
@@ -39,19 +39,19 @@ def search_options():
 def search_choice(user_choice):
     """Launch search method based on user's choice"""
     try:
-        if user_choice.upper() == "D":
+        if user_choice.upper() == "A":
             date_search()
-        elif user_choice.upper() == "R":
+        elif user_choice.upper() == "B":
             date_counter()
-        elif user_choice.upper() == "T":
+        elif user_choice.upper() == "C":
             time_search()
-        elif user_choice.upper() == "E":
+        elif user_choice.upper() == "D":
             exact_search()
-        elif user_choice.upper() == "P":
+        elif user_choice.upper() == "E":
             pattern_search()
-        elif user_choice.upper() == "M":
+        elif user_choice.upper() == "F":
             work_log.main_menu()
-        elif user_choice.upper() == "Q":
+        elif user_choice.upper() == "G":
             utils.quit_program()
         else:
             raise ValueError
@@ -237,12 +237,8 @@ def delete_row(row_to_del):
     os.remove(filename)
     os.rename(temp_file, filename)
     utils.clear_screen()
-    print("=========  Log Has Been Deleted  =========")
-    print("""What would you like to do next?\n
-          [M]ain Menu\n
-          [A]dd log\n
-          [S]earch log\n
-          [Q]uit program""")
+    print("=========  Log Has Been Deleted  =========\n\n")
+    print("[M]ain Menu [A]dd log [S]earch log [Q]uit program\n")
     get_choice = input("Choose an option: ")
     if get_choice.upper() == "M":
         work_log.main_menu()
@@ -271,7 +267,7 @@ def success_search(result):
             print("Result {} of {}".format(position_index, total_results))
 
             # Take user input to scroll through tasks or leave view
-            choice = input("\n[N]ext [P]revious [E]dit [D]elete [M]ain Menu [Q]uit ")
+            choice = input("\n[N]ext [P]revious [E]dit [D]elete [M]ain Menu: ")
             if choice.upper() == "N":
                 try:
                     utils.clear_screen()
@@ -293,8 +289,6 @@ def success_search(result):
                 delete_row(result[index])
             elif choice.upper() == "M":
                 work_log.main_menu()
-            elif choice.upper() == "Q":
-                utils.quit_program()
             else:
                 raise ValueError
         except ValueError:
@@ -318,7 +312,7 @@ def failed_search():
     utils.clear_screen()
     print("Bummer! Your search did not return any queries.")
     print("What would you like to do next?")
-    choice = input("[M]ain Menu [S]earch again [Q]uit ")
+    choice = input("[M]ain Menu [S]earch again [Q]uit: ")
     if choice.upper() == "M":
         work_log.main_menu()
     elif choice.upper() == "S":
